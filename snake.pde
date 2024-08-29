@@ -48,31 +48,25 @@ class segment {
   }
 }
 
-snake s = new snake(new PVector(40, 40));
+snakegame s = new snakegame();
+ArrayList<snakegame> snakes = new ArrayList<snakegame>();
+
 PVector v = new PVector(0, 0);
+
 void setup() {
   size(400, 400);
+  for(int i =0; i < 100;i++){
+  snakes.add(new snakegame());
+}
 }
 
 void draw() {
   background(0);
-  s.updatePosition();
+  for(int i =0; i < 100;i++){
+  snakes.get(i).update();
+}
   frameRate(10);
 }
 
-void keyPressed() {
-  if (key == 'w') {
-    s.vel = new PVector(0, -10);
-  }
-  if (key == 'a') {
-    s.vel = new PVector(-10, 0);
-  }
-  if (key == 's') {
-    s.vel = new PVector(0, 10);
-  }
-  if (key == 'd') {
-    s.vel = new PVector(10, 0);
-  }
-    s.addSegment();
 
-}
+
