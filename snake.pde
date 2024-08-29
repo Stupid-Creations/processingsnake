@@ -55,18 +55,58 @@ PVector v = new PVector(0, 0);
 
 void setup() {
   size(400, 400);
-  for(int i =0; i < 100;i++){
-  snakes.add(new snakegame());
+  for (int i =0; i < 100; i++) {
+    snakes.add(new snakegame());
+  }
 }
-}
-
+int alivecounter = 100;
 void draw() {
-  background(0);
-  for(int i =0; i < 100;i++){
-  snakes.get(i).update();
-}
+  background(255);
+  alivecounter = 100;
+  for (int i =0; i < 100; i++) {
+    snakes.get(i).update();
+    if (snakes.get(i).alive == false) {
+      alivecounter--;
+    }
+  }
+  if (alivecounter == 0) {
+    println("ded");
+    snakes.sort((a, b) -> {
+      return int(b.score-a.score);
+    }
+    );
+    for (int i = 50; i < 100; i++) {
+      snakes.set(i, new snakegame());
+      snakegame randa = snakes.get(int(random(0, 50)));
+      snakegame rando = snakes.get(int(random(0, 50)));
+      snakes.get(i).ab = reproduce(randa.ab, rando.ab);
+      snakes.get(i).bc = reproduce(randa.bc, rando.bc);
+    }
+    for (int i = 0; i < 50; i++) {
+      snakes.get(i).reset();
+    }
+  }
+      snakes.sort((a, b) -> {
+      return int(b.score-a.score);
+    }
+    );
+    text(snakes.get(0).score,50,50);
   frameRate(10);
 }
 
-
-
+void keyPressed() {
+  snakes.sort((a, b) -> {
+    return int(b.score-a.score);
+  }
+  );
+  for (int i = 50; i < 100; i++) {
+    snakes.set(i, new snakegame());
+    snakegame randa = snakes.get(int(random(0, 50)));
+    snakegame rando = snakes.get(int(random(0, 50)));
+    snakes.get(i).ab = reproduce(randa.ab, rando.ab);
+    snakes.get(i).bc = reproduce(randa.bc, rando.bc);
+  }
+  for (int i = 0; i < 50; i++) {
+    snakes.get(i).reset();
+  }
+}
