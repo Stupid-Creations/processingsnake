@@ -9,6 +9,27 @@ float[] sigmoid(float[] x) {
   }
   return a;
 }
+
+float tanh(float x) {
+  return (exp(x*2)-1)/(exp(x*2)+1);
+}
+float[] tanh(float[] x) {
+  float[]a = new float[x.length];
+  for (int i = 0; i<a.length; i++) {
+    a[i] = tanh(x[i]);
+  }
+  return a;
+}
+
+void printmatrix(float[][] a) {
+  for (int i = 0; i<a.length; i++) {
+    for (int j = 0; j<a[i].length; j++) {
+      print(a[i][j]+" ");
+    }
+    println();
+  }
+}
+
 class n_layer {
   int n1;
   int n2;
@@ -94,4 +115,71 @@ n_layer reproduce(n_layer a, n_layer b) {
     }
   }
   return c;
+}
+
+class snakegame {
+  snake s;
+  PVector food;
+  n_layer ab;
+  n_layer bc;
+  color colour;
+  boolean alive;
+  float score = 0;
+  snakegame() {
+    s = new snake(new PVector(200, 200));
+    food = new PVector(175, 175);
+    ab = new n_layer(6, 8);
+    bc = new n_layer(8, 4);
+    colour = color(random(0, 255), random(0, 255), random(0, 255));
+    alive = true;
+  }
+  void update() {
+    float ld = 10000000;
+    if (alive) {
+      fill(colour);
+      s.updatePosition();
+      if (s.segmentl.get(0).pos.x == food.x && s.segmentl.get(0).pos.y == food.y) {
+        score++;
+        food = new PVector(int(random(0,39))*10,int(random(0,39))*10);
+      }
+      if(food.dist(s.segmentl.get(0).pos) < ld){
+        ld = food.dist(s.segmentl.get(0).pos);
+      }
+      square(food.x,food.y,10);
+      float lwall = s.segmentl.get(0).pos.x;
+      float uwall = s.segmentl.get(0).pos.y;
+      float rwall = 400-s.segmentl.get(0).pos.x;
+      float dwall = 400-s.segmentl.get(0).pos.y;
+      float foodxd = food.x-s.segmentl.get(0).pos.x;
+      float foodyd = food.y-s.segmentl.get(0).pos.y;
+      ab.activate(new float[] {lwall, uwall, rwall, dwall, foodxd, foodyd}, true);
+      bc.activate(ab.pred, true);
+      float maxpred = 0;
+      for (int i = 0; i < bc.pred.length; i++) {
+        if (max(bc.pred) == bc.pred[i]) {
+          maxpred = i;
+        }
+      }
+      if (maxpred == 0) {
+        s.vel = new PVector(0, -10);
+      }
+      if (maxpred == 1) {
+        s.vel = new PVector(-10, 0);
+      }
+      if (maxpred == 2) {
+        s.vel = new PVector(0, 10);
+      }
+      if (maxpred == 3) {
+        s.vel = new PVector(10, 0);
+      }
+      if(s.segmentl.get(0).pos.y < 0 || s.segmentl.get(0).pos.y > 390 || s.segmentl.get(0).pos.x < 0|| s.segmentl.get(0).pos.y>390){
+        alive = false;
+      }
+    }
+    if(alive == false){
+      if(score == 0){
+        score = ld/1000;
+      }
+    }
+  }
 }
