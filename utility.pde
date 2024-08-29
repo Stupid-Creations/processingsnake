@@ -182,4 +182,9 @@ class snakegame {
       }
     }
   }
+  void reset(){
+        s = new snake(new PVector(200, 200));
+    food = new PVector(175, 175);
+    alive = true;
+  }
 }
