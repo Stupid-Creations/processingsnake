@@ -13,17 +13,22 @@ class snake {
       segmentl.get(i).render();
     }
   }
-  void updatepos(PVector c) {
-    vel = c;
+  void updatePosition() {
+    PVector prevPos = segmentl.get(0).pos.copy();
     segmentl.get(0).updatePos(vel);
+
     for (int i = 1; i < segmentl.size(); i++) {
-      segmentl.get(i).pos = segmentl.get(i-1).pos;
+      PVector tempPos = segmentl.get(i).pos.copy();
+      segmentl.get(i).pos.set(prevPos);
+      prevPos = tempPos;
     }
+    render();
   }
-  void addsegment() {
-    PVector tempnew = new PVector(segmentl.get(segmentl.size()-1).pos.x+segmentsize*(vel.x/segmentsize), segmentl.get(segmentl.size()-1).pos.y+segmentsize*(vel.y/segmentsize));
-    println(tempnew);
-    segmentl.add(new segment(tempnew, segmentsize));
+
+  void addSegment() {
+    segment lastSegment = segmentl.get(segmentl.size() - 1);
+    PVector newSegmentPos = lastSegment.pos.copy();
+    segmentl.add(new segment(newSegmentPos, segmentsize));
     segments++;
   }
 }
@@ -51,27 +56,23 @@ void setup() {
 
 void draw() {
   background(0);
-  s.render();
-  s.updatepos(v);
-  s.addsegment();
+  s.updatePosition();
   frameRate(10);
 }
 
 void keyPressed() {
   if (key == 'w') {
-    v = new PVector(0, 0);
-    v.y = -10;
+    s.vel = new PVector(0, -10);
   }
   if (key == 'a') {
-    v = new PVector(0, 0);
-    v.x = -10;
+    s.vel = new PVector(-10, 0);
   }
   if (key == 's') {
-    v = new PVector(0, 0);
-    v.y = 10;
+    s.vel = new PVector(0, 10);
   }
   if (key == 'd') {
-    v = new PVector(0, 0);
-    v.x = 10;
+    s.vel = new PVector(10, 0);
   }
+    s.addSegment();
+
 }
